@@ -11,8 +11,6 @@ const resolvers = {
 
   Mutation: {
     createUser: (root, { input }) => {
-      console.log(input);
-
       const user = {
         id: uniqid(),
         ...input,
@@ -20,6 +18,27 @@ const resolvers = {
 
       USERS.push(user);
       return user;
+    },
+
+    updateUser: (root, { input }) => {
+      const indexOldUser = USERS.findIndex((i) => i.id === input.id);
+      const newUser = { ...USERS[indexOldUser], ...input };
+      USERS[indexOldUser] = newUser;
+      // return newUser;
+      return newUser;
+    },
+
+    deleteUser: (root, { id }) => {
+      const oldLength = USERS.length;
+      // find the index of element that will be deleted
+      const indexOldUser = USERS.findIndex((i) => i.id === id);
+      USERS.splice(indexOldUser, 1);
+
+      const newLength = USERS.length;
+      if (oldLength <= newLength) {
+        return false;
+      }
+      return true;
     },
   },
 
